@@ -64,6 +64,7 @@
     <Compile Include="Assets\Scripts\CellScript.cs" />
     <Compile Include="Assets\Scripts\Controller.cs" />
     <Compile Include="Assets\Scripts\loadMap.cs" />
+    <Compile Include="Assets\Scripts\Menu.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>/Users/apple/Documents/Code/AI/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
