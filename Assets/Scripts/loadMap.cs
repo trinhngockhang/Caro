@@ -4,22 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class loadMap : MonoBehaviour {
-    public static int height = 10;
+    public static int height = 15;
     public static int width = 10;
     public static Button[,] buttons = new Button[width, height];
-    public static int[] Border = { 10, 0, 10, 0 };
+    public static int[] Border = { 15, 0, 15, 0 };
     int i,j;
 	public static int player = 1;
 	public Transform parent;
-	public static int[,] BigMap = new int[width, height]; 
+	public static int[,] BigMap = new int[height, height]; 
     public static bool End = false;
 
 	void Start () {
         
         for (i = 0; i < width; i++){
             for (j = 0; j < height; j++) {
-					Vector3 pos = new Vector3 ((-486) + i * 108f, (432) - j * 108, 0);	
-					buttons [i, j] = (Button)Instantiate (Resources.Load ("Prefabs/Cell", typeof(Button))) as Button;
+                Vector3 pos = new Vector3((-486) + i * 108f, (600) - j * 108, 0);
+                buttons [i, j] = (Button)Instantiate (Resources.Load ("Prefabs/Cell", typeof(Button))) as Button;
 					buttons [i, j].transform.SetParent (parent);  
 					buttons [i, j].transform.localPosition = pos;
                     BigMap[i, j] = 0;
@@ -27,7 +27,7 @@ public class loadMap : MonoBehaviour {
 			}
     }
 
-    public static bool win(int [,] fakeMap,int posX, int posY)
+    public static bool win(int[,] fakeMap, int posX, int posY)
     {
         int Count = 0;
         int x = posX;
@@ -72,7 +72,7 @@ public class loadMap : MonoBehaviour {
             }
             // Xet chieu doc
             Count = 0; i = x; j = y;
-            while (i < 10)
+            while (i < 15)
             {
                 if (fakeMap[x, y] == fakeMap[i, j])
                 {
@@ -99,7 +99,7 @@ public class loadMap : MonoBehaviour {
             }
             // Xet duong cheo
             Count = 0; i = x; j = y;
-            while ((i < 10) && (j < 10))
+            while ((i < 15) && (j < 10))
             {
                 if (fakeMap[x, y] == fakeMap[i, j])
                 {
@@ -128,7 +128,7 @@ public class loadMap : MonoBehaviour {
             }
             //Xet duong cheo
             Count = 0; i = x; j = y;
-            while ((i < 10) && (j >= 0))
+            while ((i < 15) && (j >= 0))
             {
                 if (fakeMap[x, y] == fakeMap[i, j])
                 {

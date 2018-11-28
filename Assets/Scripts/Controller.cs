@@ -10,15 +10,18 @@ public class Controller : MonoBehaviour
     static int twoOpen = 10;
     static int oneOpen = 4;
     static int triple = 1200;
-    static int quadar = 3000;
+    static int quadar = 4000;
     static int attack = 4;
-    static int defende = 5;
+    static int defende = 6;
     static int winAtFakeMove = 7000;
     bool firstMove = true;
     static  bool firstMax, firstMin;
     static int[] lastMove1 = new int[2];
     static int maxdepth = 2;
-    static int[] alpha = new int[3];
+    static int[] alpha = new int[4];
+
+
+
     public static void MiniMax()
     {
         alpha[0] = -9999999;
@@ -31,8 +34,6 @@ public class Controller : MonoBehaviour
         bestMove = Max(miniMap, 0, 0, 0);
         Debug.Log("best move " + bestMove[0] + bestMove[1] + "score " + bestMove[2]);
         loadMap.buttons[bestMove[0], bestMove[1]].onClick.Invoke();
-
-
     }
     public static int[] Max(int[,] Map, int depth, int lX, int lY)
     {
@@ -49,7 +50,7 @@ public class Controller : MonoBehaviour
             i <= (MaxBorder[1] + depth <= 9 ? MaxBorder[1] + depth : MaxBorder[1]); i++)
         {
             for (int j = (MaxBorder[2] - depth >= 0 ? MaxBorder[2] - depth : MaxBorder[2]);
-             j <= (MaxBorder[3] + depth <= 9 ? MaxBorder[3] + depth : MaxBorder[3]); j++)
+             j <= (MaxBorder[3] + depth <= 14 ? MaxBorder[3] + depth : MaxBorder[3]); j++)
             {
                 // neu o chua dc danh.
                 score = 0;
@@ -66,7 +67,7 @@ public class Controller : MonoBehaviour
                         Map[j, i] = 0;
                         return bestMoveMax;
                     }
-                    else if (depthMax >= 2)
+                    else if (depthMax >= maxdepth)
                     {
                         score = caculate(Map, j, i) * attack;
                     }
@@ -88,6 +89,14 @@ public class Controller : MonoBehaviour
                     alpha[depthMax] = maxScore;
                     // xoa nuoc di cho luot xet tiep
                     Map[j, i] = 0;
+                    //if (depthMax > 0)
+                    //{
+                    //    if (maxScore > alpha[depthMax - 1])
+                    //    {
+                    //        bestMoveMax[2] = maxScore;
+                    //        return bestMoveMax;
+                    //    };
+                    //}
                 }
             }
         }
@@ -108,7 +117,7 @@ public class Controller : MonoBehaviour
              i <= (MinBorder[1] + depth <= 9 ? MinBorder[1] + depth : MinBorder[1]); i++)
         {
             for (int j = (MinBorder[2] - depth >= 0 ? MinBorder[2] - depth : MinBorder[2]);
-             j <= (MinBorder[3] + depth <= 9 ? MinBorder[3] + depth : MinBorder[3]); j++)
+             j <= (MinBorder[3] + depth <= 14 ? MinBorder[3] + depth : MinBorder[3]); j++)
             {
                 score = 0;
                 if (Map[j, i] == 0)
@@ -123,9 +132,15 @@ public class Controller : MonoBehaviour
                         Map[j, i] = 0;
                         return bestMoveMin;
                     }
+                    else if (depthMin >= maxdepth)
+                    {
+                        score -= caculate(Map, j, i) * defende;
+                    }else{
+                        score = -caculate(Map, j, i) * defende;
+                        score += Max(Map, depthMin + 1, i, j)[2];
+                    }
                     // chon max
-                    score = -caculate(Map, j, i) * defende;
-                    score += Max(Map, depthMin + 1, i, j)[2];
+             
 
                     // Debug.Log("soce min " + score);
                     if (score < minScore)
@@ -135,6 +150,7 @@ public class Controller : MonoBehaviour
                         bestMoveMin[1] = j;
                         bestMoveMin[2] = minScore;
                     }
+
                     alpha[depthMin] = minScore;
                     // xoa nuoc di cho luot xet tiep
                     Map[j, i] = 0;
@@ -154,6 +170,7 @@ public class Controller : MonoBehaviour
         return bestMoveMin;
 
     }
+
 
 
     public static int caculate(int[,] fakeMap, int posX, int posY)
@@ -223,7 +240,7 @@ public class Controller : MonoBehaviour
             // Xet chieu doc
             Count = 0; i = x; j = y;
             start = false; end = false;
-            while (i < 10)
+            while (i < 15)
             {
                 if (fakeMap[x, y] == fakeMap[i, j])
                 {
@@ -271,7 +288,7 @@ public class Controller : MonoBehaviour
             }
             // Xet duong cheo
             Count = 0; i = x; j = y; start = false; end = false;
-            while ((i < 10) && (j < 10))
+            while ((i < 15) && (j < 10))
             {
                 if (fakeMap[x, y] == fakeMap[i, j])
                 {
