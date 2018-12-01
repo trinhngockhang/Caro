@@ -10,36 +10,50 @@ public class CellScript : MonoBehaviour {
 	public static int y = 1;
     public Sprite X;
     public Sprite O;
+    public static int win = 0;
+    //public Text turn;
     public Controller controller;
     public static int[] bigSize = new int[4];
 	public void getEventButtonClick()
 	{
+        if (win == 0)
+        {
+            if (iResult == -1)
+            {
+                x = (int)(gameObject.transform.localPosition.x - (-486)) / 108;
+                y = (int)(600 - gameObject.transform.localPosition.y) / 108;
+                Debug.Log(x + " " + y);
+                loadMap.Border = updateSize(x, y, loadMap.Border);
+                Debug.Log("minwidth : " + loadMap.Border[0] + " max width " + loadMap.Border[1] + " min height" + loadMap.Border[2] + " max height " + loadMap.Border[3]);
+                //Debug.Log(gameObject.transform.localPosition.x+" "+gameObject.transform.localPosition.y);
+                loadMap.BigMap[y, x] = loadMap.player;
 
-		if (iResult == -1) {
-            x = (int)(gameObject.transform.localPosition.x - (-486)) / 108;
-            y = (int)(600 - gameObject.transform.localPosition.y) / 108;
-            Debug.Log (x + " " + y);
-            loadMap.Border =  updateSize(x, y, loadMap.Border);
-            Debug.Log("minwidth : " + loadMap.Border[0] + " max width " + loadMap.Border[1] + " min height" + loadMap.Border[2] + " max height " + loadMap.Border[3]);
-            //Debug.Log(gameObject.transform.localPosition.x+" "+gameObject.transform.localPosition.y);
-            loadMap.BigMap[y, x] = loadMap.player;
-
-			if (loadMap.player == 1) {
-				gameObject.GetComponent<Image> ().sprite = X; 
-				loadMap.player = 2;
-                if(SceneManager.GetActiveScene().name.ToString() == "AI" ){
-                    Controller.MiniMax();
+                if (loadMap.player == 1)
+                {
+                    gameObject.GetComponent<Image>().sprite = X;
+                    loadMap.player = 2;
+                    if (SceneManager.GetActiveScene().name.ToString() == "AI")
+                    {
+                        Controller.MiniMax();
+                    }
+                    //loadMap.turn.text = "AI";
+                    //Debug.Log(loadMap.player);
                 }
-
-			}
-            else {
-				gameObject.GetComponent<Image> ().sprite = O;
-				loadMap.player =  1;
-			}
-			iResult = loadMap.player;
-            if (loadMap.win (loadMap.BigMap,y,x) == true)
-				Debug.Log ("Win");
-		}
+                else
+                {
+                    gameObject.GetComponent<Image>().sprite = O;
+                    loadMap.player = 1;
+                    //Debug.Log(loadMap.player);
+                    //loadMap.turn.text = "You";
+                }
+                iResult = loadMap.player;
+                if (loadMap.win(loadMap.BigMap, y, x) == true)
+                {
+                    Debug.Log("Win");
+                    win = 1;
+                }
+            }
+        }
 	}
 
     public static int[] updateSize(int x,int y,int[] arr){

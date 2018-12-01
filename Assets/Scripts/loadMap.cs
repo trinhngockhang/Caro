@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class loadMap : MonoBehaviour {
     public static int height = 15;
     public static int width = 10;
+    //public Text turn;
     public static Button[,] buttons = new Button[width, height];
     public static int[] Border = { 15, 0, 15, 0 };
     int i,j;
@@ -14,8 +15,12 @@ public class loadMap : MonoBehaviour {
 	public static int[,] BigMap = new int[height, height]; 
     public static bool End = false;
 
+    public GameObject win1;
+    public GameObject win2;
+    public Text text;
+
 	void Start () {
-        
+
         for (i = 0; i < width; i++){
             for (j = 0; j < height; j++) {
                 Vector3 pos = new Vector3((-486) + i * 108f, (600) - j * 108, 0);
@@ -25,6 +30,21 @@ public class loadMap : MonoBehaviour {
                     BigMap[i, j] = 0;
 				}
 			}
+    }
+
+    void Update()
+    {   
+        if (CellScript.win == 1) {
+            win1.SetActive(true);
+            win2.SetActive(true);
+            if (player == 1)
+            {
+                text.text = "AI WIN";
+            }
+            else {
+                text.text = "YOU WIN";
+            }
+        }    
     }
 
     public static bool win(int[,] fakeMap, int posX, int posY)
