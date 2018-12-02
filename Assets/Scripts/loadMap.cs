@@ -2,49 +2,92 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 public class loadMap : MonoBehaviour {
     public static int height = 15;
     public static int width = 10;
-    //public Text turn;
+    public Text turn;
     public static Button[,] buttons = new Button[width, height];
     public static int[] Border = { 15, 0, 15, 0 };
     int i,j;
-	public static int player = 1;
+	
 	public Transform parent;
-	public static int[,] BigMap = new int[height, height]; 
-    public static bool End = false;
-
-    public GameObject win1;
-    public GameObject win2;
-    public Text text;
+	public static int[,] BigMap = new int[height, height];
+    public static bool End ;
+    public static loadMap instance;
+    public Text winText;
 
 	void Start () {
-
-        for (i = 0; i < width; i++){
-            for (j = 0; j < height; j++) {
-                Vector3 pos = new Vector3((-486) + i * 108f, (600) - j * 108, 0);
-                buttons [i, j] = (Button)Instantiate (Resources.Load ("Prefabs/Cell", typeof(Button))) as Button;
-					buttons [i, j].transform.SetParent (parent);  
-					buttons [i, j].transform.localPosition = pos;
-                    BigMap[i, j] = 0;
-				}
-			}
+      initial();
+      _makeInstance();
     }
 
-    void Update()
-    {   
-        if (CellScript.win == 1) {
-            win1.SetActive(true);
-            win2.SetActive(true);
-            if (player == 1)
+    void _makeInstance()
+    {
+        if (instance == null) instance = this;
+    }
+    void initial(){
+    End = false;
+    winText.text = "";
+    CellScript.win = 0;
+    CellScript.player = 1;
+    for (i = 0; i < width; i++){
+        for (j = 0; j < height; j++) {
+            Vector3 pos = new Vector3((-486) + i * 108f, (600) - j * 108, 0);
+            buttons [i, j] = (Button)Instantiate (Resources.Load ("Prefabs/Cell", typeof(Button))) as Button;
+            buttons [i, j].transform.SetParent (parent);
+            buttons [i, j].transform.localPosition = pos;
+            BigMap[i, j] = 0;
+    }
+  }
+  }
+
+   public  void checkTurn(){
+        if (CellScript.win != 1)
+        {
+            if (SceneManager.GetActiveScene().name.ToString() != "AI")
             {
-                text.text = "AI WIN";
+                if (CellScript.player == 2)
+                {
+                    turn.text = "Turn:P2";
+                }
+                else
+                {
+                    turn.text = "Turn:P1";
+                }
             }
-            else {
-                text.text = "YOU WIN";
+        }
+        else
+        {
+
+            if (SceneManager.GetActiveScene().name.ToString() == "AI")
+            {
+                if (CellScript.player == 1)
+                {
+                    winText.text = "AI WIN";
+                }
+                else
+                {
+                    winText.text = "YOU WIN";
+                }
             }
-        }    
+            else
+            {
+                turn.text = "";
+                if (CellScript.player == 1)
+                {
+                    winText.text = "P2 win";
+                }
+                else
+                {
+                    winText.text = "P1 win";
+                }
+            }
+        }
+    }
+    void Update()
+    {
+       
     }
 
     public static bool win(int[,] fakeMap, int posX, int posY)
@@ -55,7 +98,7 @@ public class loadMap : MonoBehaviour {
         int i = x;
         int j = y;
 
-        //Xet theo chieu ngang 
+        //Xet theo chieu ngang
         if (fakeMap[x, y] != 0)
         {
             while (j < 10)
@@ -178,4 +221,32 @@ public class loadMap : MonoBehaviour {
         }
         return false;
     }
+    public void returnHome(){
+      SceneManager.LoadScene("Menu");
+      initial();
+      clear();
+    }
+
+    public void clear(){
+        initial();
+        Border[0] = 15;
+        Border[1] = 0;
+        Border[2] = 15;
+        Border[3] = 0;
+    }
+
+    public void again(){
+        if (SceneManager.GetActiveScene().name.ToString() == "AI")
+        {
+            SceneManager.LoadScene("AI");
+        }
+        else
+        {
+            SceneManager.LoadScene("Game");
+        }
+        clear();
+    }
+  
+
+  
 }
